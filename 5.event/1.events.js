@@ -11,6 +11,13 @@ Person.prototype.on = function (eventName, callback) {
         this._events[eventName] = [callback];
     }
 }
+Person.prototype.once = function (eventName, callback) {
+    function onceCallback(){
+        callback.apply(this,arguments);
+        this.removeListener(eventName,onceCallback);
+    }
+    this.on(eventName,onceCallback);
+}
 
 Person.prototype.emit = function (eventName) {
     var args = Array.prototype.slice.call(arguments, 1);
@@ -29,3 +36,12 @@ girl.on('长发及腰', function () {
     console.log('记得撩');
 });
 girl.emit('长发及腰');
+girl.once('18',function(style){
+    console.log(style,'嫁张三');
+});
+girl.once('18',function(style){
+    console.log(style,'嫁李四');
+});
+girl.emit('18','快乐');
+girl.emit('18','不情愿的');
+girl.emit('18','拒绝的');
